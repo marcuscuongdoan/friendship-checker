@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Friendship Checker</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="text/javascript" src="js/main.js"></script>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+  </head>
+  <body>
+    <div id="container"></div>
+    <div id="board">
+      <span id="score">How close are you and your best friend?</span>
+    </div>
+    <form name="myForm">
+      <input
+        id="button"
+        type="button"
+        value="Submit"
+        disabled
+        onclick="onSubmit()"
+      />
+    </form>
+
+    <script src="/js/three.js"></script>
+    <script type="module" src="/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.2.0/Tween.js"></script>
+  </body>
+</html>
