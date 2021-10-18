@@ -1,0 +1,34 @@
+{
+  "name": "friendship-checker",
+  "version": "1.0.0",
+  "description": "Friendship checking app that determine your relationship between you and your best friend as a form to submit",
+  "private": true,
+  "scripts": {
+    "start": "webpack serve --open",
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcusdoan/friendship-checker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcusdoan/friendship-checker/issues"
+  },
+  "homepage": "https://github.com/marcusdoan/friendship-checker#readme",
+  "devDependencies": {
+    "copy-webpack-plugin": "^9.0.1",
+    "css-loader": "^6.4.0",
+    "html-webpack-plugin": "^5.4.0",
+    "mini-css-extract-plugin": "^2.4.2",
+    "webpack": "^5.58.2",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.3.1"
+  },
+  "dependencies": {
+    "three": "^0.133.1"
+  }
+}

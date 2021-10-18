@@ -1,8 +1,8 @@
-import Stats from "./js/stats.module.js";
-import { GLTFLoader } from "./js/GLTFLoader.js";
-import { OrbitControls } from "./js/OrbitControls.js";
-import { GUI } from "./js/dat.gui.module.js";
-// import * as Pathfinding from "./js/three-pathfinding.js";
+import * as THREE from 'three';
+
+import Stats from "three/examples/jsm/libs/stats.module.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 let scene, renderer, camera, stats;
 let model, skeleton, mixer, clock, mixer2;
@@ -11,6 +11,8 @@ let mesh;
 let close, notClose, veryClose;
 
 const crossFadeControls = [];
+
+const container = document.getElementById('container');
 
 let currentBaseAction = "Idle";
 const allActions = [];
@@ -25,7 +27,7 @@ const baseActions = {
 const additiveActions = {
     "Hug Animation": { weight: 0 },
 };
-let panelSettings, numAnimations;
+let numAnimations;
 
 const mouse = new THREE.Vector2(1, 1);
 const raycaster = new THREE.Raycaster();
@@ -91,7 +93,7 @@ function init() {
 
     //load person in the middle
     loader.load(
-        "/assets/model.gltf",
+        './assets/model.gltf',
         function (gltf) {
             const model2 = gltf.scene;
             scene.add(model2);
@@ -107,7 +109,7 @@ function init() {
         });
 
     loader.load(
-        "/assets/model.gltf",
+        './assets/model.gltf',
         function (gltf) {
             model = gltf.scene;
             model.position.z = 20;
@@ -189,82 +191,10 @@ function init() {
     controls.update();
 
     stats = new Stats();
-    // container.appendChild(stats.dom);
 
     window.addEventListener("resize", onWindowResize, false);
     container.addEventListener("click", onClick);
-}
-
-function createPanel() {
-    const panel = new GUI({ width: 310 });
-
-    const folder1 = panel.addFolder("Base Actions");
-    const folder2 = panel.addFolder("Additive Action Weights");
-    const folder3 = panel.addFolder("General Speed");
-
-    panelSettings = {
-        "modify time scale": 1.0,
-    };
-
-    const baseNames = ["None", ...Object.keys(baseActions)];
-
-    for (let i = 0, l = baseNames.length; i !== l; ++i) {
-        const name = baseNames[i];
-        const settings = baseActions[name];
-        panelSettings[name] = function () {
-            const currentSettings = baseActions[currentBaseAction];
-            const currentAction = currentSettings
-                ? currentSettings.action
-                : null;
-            const action = settings ? settings.action : null;
-
-            prepareCrossFade(currentAction, action, 0.35);
-        };
-
-        crossFadeControls.push(folder1.add(panelSettings, name));
-    }
-
-    for (const name of Object.keys(additiveActions)) {
-        const settings = additiveActions[name];
-
-        panelSettings[name] = settings.weight;
-        folder2
-            .add(panelSettings, name, 0.0, 1.0, 0.01)
-            .listen()
-            .onChange(function (weight) {
-                setWeight(settings.action, weight);
-                settings.weight = weight;
-            });
-    }
-
-    folder3
-        .add(panelSettings, "modify time scale", 0.0, 1.5, 0.01)
-        .onChange(modifyTimeScale);
-
-    folder1.open();
-    folder2.open();
-    folder3.open();
-
-    crossFadeControls.forEach(function (control) {
-        control.classList1 =
-            control.domElement.parentElement.parentElement.classList;
-        control.classList2 =
-            control.domElement.previousElementSibling.classList;
-
-        control.setInactive = function () {
-            control.classList2.add("control-inactive");
-        };
-
-        control.setActive = function () {
-            control.classList2.remove("control-inactive");
-        };
-
-        const settings = baseActions[control.property];
-
-        if (!settings || !settings.weight) {
-            control.setInactive();
-        }
-    });
+    document.getElementById("button").addEventListener("click", onSubmit);
 }
 
 function animate() {
@@ -445,22 +375,6 @@ function distanceTiming(first, second) {
 }
 
 function friendshipCalculating() {
-    // const position = new THREE.Vector2(model.position.x / 50 + 1, model.position.z / 50 - 1);
-    // console.log(model);
-    // raycaster.setFromCamera(position, camera);
-
-    // const newRaycaster = new THREE.Raycaster(model.position, camera);
-    // console.log(model.position);
-    // var intersects = newRaycaster.intersectObjects([model.children[0], close, notClose, veryClose], true);
-    // console.log(model)
-    // if (intersects.length) {
-    //     console.log(intersects)
-    // intersects.forEach(intersect => {
-    //     console.log(intersect.object.name)
-    //     if (intersect.object.name !== mainCharacter.name)
-    //         return intersect.object.name;
-    // })
-    // }
     const position = new THREE.Vector2(model.position.x, model.position.z);
     const d = Math.sqrt(Math.pow(position.x, 2) + Math.pow(position.y, 2));
     if (d < 6) {
@@ -493,4 +407,9 @@ function validateForm() {
     }
     document.getElementById("button").disabled = true;
     return false;
+}
+
+function onSubmit() {
+    const status = document.getElementById('score').innerHTML;
+    alert("Your relationship status is: " + status);
 }
