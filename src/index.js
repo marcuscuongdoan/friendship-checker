@@ -8,6 +8,8 @@ let scene, renderer, camera, stats;
 let model, skeleton, mixer, clock, mixer2;
 let mesh;
 
+let tweenGroup = new TWEEN.Group();
+
 let close, notClose, veryClose;
 
 const crossFadeControls = [];
@@ -199,7 +201,7 @@ function init() {
 
 function animate() {
     // Render loop
-    TWEEN.update();
+    tweenGroup.update();
 
     requestAnimationFrame(animate);
 
@@ -290,7 +292,6 @@ function synchronizeCrossFade(startAction, endAction, duration) {
     function onLoopFinished(event) {
         if (event.action === startAction) {
             mixer.removeEventListener("loop", onLoopFinished);
-
             executeCrossFade(startAction, endAction, duration);
         }
     }
@@ -339,30 +340,28 @@ function onClick(event) {
 
     if (intersection.length > 0) {
 
-        TWEEN.removeAll();
+        if (tweenGroup.getAll()) {
+            tweenGroup.removeAll();
+        }
 
         let target = intersection[0];
 
         let time = distanceTiming(model.position, target.point);
 
-        let tween = new TWEEN.Tween(model.position).to(target.point, time * 100);
-        tween.start();
+        let tween = new TWEEN.Tween(model.position, tweenGroup).to(target.point, time * 100);
         tween.onStart(() => {
             model.lookAt(target.point);
-            prepareCrossFade(baseActions[currentBaseAction].action, baseActions['Slow_Run'].action, 0.35);
+            prepareCrossFade(baseActions[currentBaseAction].action, baseActions['Slow_Run'].action, 0);
         })
         tween.onComplete(() => {
-            prepareCrossFade(baseActions[currentBaseAction].action, baseActions['Idle'].action, 0.35);
-            tween.stop();
+            prepareCrossFade(baseActions[currentBaseAction].action, baseActions['Idle'].action, 0);
         })
         tween.onUpdate(() => {
             document.getElementById('score').innerHTML = friendshipCalculating();
-            validateForm()
+            validateForm();
+        });
 
-        })
-        tween.onStop(() => {
-            TWEEN.removeAll();
-        })
+        tween.start();
     }
 
     renderer.render(scene, camera);
