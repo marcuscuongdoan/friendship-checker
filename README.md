@@ -6,12 +6,12 @@ This is a small application build with threejs that determine user relationship 
 
 ### Setup
 
-    `npm install`
+    npm install
 
 ### Build
 
-    `npm run build`
+    npm run build
 
 ### Start
 
-    `npm run start`
+    npm run start
